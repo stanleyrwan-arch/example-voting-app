@@ -50,7 +50,7 @@ jobs:
           docker image ls | grep example-voting-app
 
       - name: Start services with Docker Compose
-        run: docker-compose up -d
+        run: docker compose up -d
         env:
           COMPOSE_PROJECT_NAME: ci-test
 
@@ -58,15 +58,15 @@ jobs:
         run: |
           echo "Waiting for services to start..."
           sleep 10
-          docker-compose ps
+          docker compose ps
 
       - name: Check vote service connectivity
         run: |
-          docker-compose exec -T vote curl -f http://localhost/ || true
+          docker compose exec -T vote curl -f http://localhost/ || true
 
       - name: Check result service connectivity
         run: |
-          docker-compose exec -T result curl -f http://localhost/ || true
+          docker compose exec -T result curl -f http://localhost/ || true
 
       - name: Test vote endpoint
         run: |
@@ -110,15 +110,15 @@ jobs:
 
       - name: Verify database connectivity
         run: |
-          docker-compose exec -T db psql -U postgres -c "SELECT 1" || true
+          docker compose exec -T db psql -U postgres -c "SELECT 1" || true
 
       - name: Check Docker Compose logs
         if: always()
-        run: docker-compose logs --tail=50
+        run: docker compose logs --tail=50
 
       - name: Stop services
         if: always()
-        run: docker-compose down -v
+        run: docker compose down -v
 
   lint-python:
     runs-on: ubuntu-latest
